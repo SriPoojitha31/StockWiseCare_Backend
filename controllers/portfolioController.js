@@ -59,8 +59,3 @@ export const updatePortfolio = async (req, res) => {
   }
 };
 
-module.exports = {
-  getPortfolioAnalytics,
-  getPortfolioDetails,
-  updatePortfolio,
-};
