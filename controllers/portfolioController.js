@@ -1,6 +1,6 @@
 // @desc Get analytics based on user’s portfolio (e.g., total uploads, latest activity)
 // @route GET /api/portfolio/analytics
-const getPortfolioAnalytics = async (req, res) => {
+ export const getPortfolioAnalytics = async (req, res) => {
   try {
     const userId = req.user._id;
 
@@ -20,7 +20,7 @@ const getPortfolioAnalytics = async (req, res) => {
 
 // @desc Get portfolio user profile & current badge
 // @route GET /api/portfolio/details
-const getPortfolioDetails = async (req, res) => {
+export const getPortfolioDetails = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("name email badge");
 
@@ -39,7 +39,7 @@ const getPortfolioDetails = async (req, res) => {
 
 // @desc Update user profile (e.g., badge reset, manual updates)
 // @route PUT /api/portfolio/update
-const updatePortfolio = async (req, res) => {
+export const updatePortfolio = async (req, res) => {
   try {
     const updates = req.body;
     const userId = req.user._id;
