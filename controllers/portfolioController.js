@@ -1,75 +1,60 @@
-// controllers/portfolioController.js
-
-const Portfolio = require("../models/Portfolio");
-const User = require("../models/User");
-
-// @desc Upload a financial document (e.g., trade receipt, investment proof)
-// @route POST /api/portfolio/upload
-exports.uploadDocument = async (req, res) => {
+// @desc Get analytics based on user’s portfolio (e.g., total uploads, latest activity)
+// @route GET /api/portfolio/analytics
+exports.getPortfolioAnalytics = async (req, res) => {
   try {
-    const { documentType, description } = req.body;
-    const file = req.file; // file handled by multer
+    const userId = req.user._id;
 
-    if (!file) {
-      return res.status(400).json({ error: "No file uploaded." });
-    }
+    const totalDocs = await Portfolio.countDocuments({ uploadedBy: userId });
+    const latestDoc = await Portfolio.findOne({ uploadedBy: userId }).sort({ createdAt: -1 });
 
-    const newDocument = new Portfolio({
-      documentType,
-      description,
-      filePath: file.path,
-      uploadedBy: req.user._id,
-    });
-
-    await newDocument.save();
-
-    res.status(201).json({
-      message: "Financial document uploaded successfully.",
-      document: newDocument,
+    res.status(200).json({
+      totalUploads: totalDocs,
+      lastUploadDate: latestDoc?.createdAt || null,
+      lastDocumentType: latestDoc?.documentType || null,
     });
   } catch (err) {
-    console.error("Upload Error:", err);
-    res.status(500).json({ error: "Error uploading financial document." });
+    console.error("Analytics Error:", err);
+    res.status(500).json({ error: "Failed to fetch portfolio analytics." });
   }
 };
 
-// @desc Get all uploaded financial documents by a specific user
-// @route GET /api/portfolio/user/:userId
-exports.getUserDocuments = async (req, res) => {
+// @desc Get portfolio user profile & current badge
+// @route GET /api/portfolio/details
+exports.getPortfolioDetails = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const user = await User.findById(req.user._id).select("name email badge");
 
-    const documents = await Portfolio.find({ uploadedBy: userId }).sort({ createdAt: -1 });
+    if (!user) return res.status(404).json({ error: "User not found." });
 
-    res.status(200).json(documents);
+    res.status(200).json({
+      name: user.name,
+      email: user.email,
+      badge: user.badge,
+    });
   } catch (err) {
-    console.error("Fetch Error:", err);
-    res.status(500).json({ error: "Failed to fetch financial documents for user." });
+    console.error("Details Error:", err);
+    res.status(500).json({ error: "Failed to get portfolio details." });
   }
 };
 
-// @desc Award badges based on user's financial activity
-// @route POST /api/portfolio/award-badge
-exports.awardUserBadge = async (req, res) => {
+// @desc Update user profile (e.g., badge reset, manual updates)
+// @route PUT /api/portfolio/update
+exports.updatePortfolio = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const updates = req.body;
+    const userId = req.user._id;
 
-    const documentCount = await Portfolio.countDocuments({ uploadedBy: userId });
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+      runValidators: true,
+    });
 
-    let badge = null;
-    if (documentCount >= 10) badge = "💼 Financial Pro";
-    else if (documentCount >= 5) badge = "📈 Smart Investor";
-    else if (documentCount >= 1) badge = "📥 Getting Started";
-
-    if (!badge) {
-      return res.status(200).json({ message: "No badge earned yet." });
-    }
-
-    await User.findByIdAndUpdate(userId, { badge });
-
-    res.status(200).json({ message: `Badge '${badge}' awarded successfully.` });
+    res.status(200).json({
+      message: "Portfolio updated successfully.",
+      updatedUser,
+    });
   } catch (err) {
-    console.error("Badge Error:", err);
-    res.status(500).json({ error: "Error assigning badge to user." });
+    console.error("Update Error:", err);
+    res.status(500).json({ error: "Failed to update portfolio." });
   }
 };
