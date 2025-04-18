@@ -2,7 +2,7 @@ import express from 'express';
 import { getAIRecommendations, getSentimentAnalysis } from '../controllers/aiController.js';
 import { analyzeNews } from '../controllers/ai-insights/newsController.js';
 import { optimizePortfolio } from '../controllers/ai-insights/portfolioController.js';
-import { analyzeSentiment } from '../controllers/ai-insights/sentimentController.js';
+import { analyzeNews } from '../controllers/ai-insights/stockController.js';
 import { analyzeSentiment } from '../controllers/ai-insights/sentimentController.js';
 import { isAuthenticated } from '../middlewares/authMiddleware.js';
 
