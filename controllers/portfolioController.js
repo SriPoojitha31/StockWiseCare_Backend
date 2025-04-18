@@ -1,6 +1,6 @@
 // @desc Get analytics based on user’s portfolio (e.g., total uploads, latest activity)
 // @route GET /api/portfolio/analytics
-exports.getPortfolioAnalytics = async (req, res) => {
+const getPortfolioAnalytics = async (req, res) => {
   try {
     const userId = req.user._id;
 
@@ -20,7 +20,7 @@ exports.getPortfolioAnalytics = async (req, res) => {
 
 // @desc Get portfolio user profile & current badge
 // @route GET /api/portfolio/details
-exports.getPortfolioDetails = async (req, res) => {
+const getPortfolioDetails = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("name email badge");
 
@@ -39,7 +39,7 @@ exports.getPortfolioDetails = async (req, res) => {
 
 // @desc Update user profile (e.g., badge reset, manual updates)
 // @route PUT /api/portfolio/update
-exports.updatePortfolio = async (req, res) => {
+const updatePortfolio = async (req, res) => {
   try {
     const updates = req.body;
     const userId = req.user._id;
@@ -57,4 +57,10 @@ exports.updatePortfolio = async (req, res) => {
     console.error("Update Error:", err);
     res.status(500).json({ error: "Failed to update portfolio." });
   }
+};
+
+module.exports = {
+  getPortfolioAnalytics,
+  getPortfolioDetails,
+  updatePortfolio,
 };
