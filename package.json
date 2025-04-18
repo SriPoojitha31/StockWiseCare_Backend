@@ -1,6 +1,7 @@
 {
   "name": "stockwisecare_server",
   "version": "1.0.0",
+  "type": "module",
   "main": "server.js",
   "directories": {
     "test": "tests"
@@ -29,6 +30,7 @@
     "mongoose": "^8.13.2",
     "morgan": "^1.10.0",
     "natural": "^8.0.1",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.10.1",
     "path": "^0.12.7",
     "sentiment": "^5.0.2",
