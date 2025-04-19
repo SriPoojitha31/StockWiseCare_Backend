@@ -1,40 +1,68 @@
 # Backend - StockWiseCare
 
-## Problem Statement
-The backend serves as the data provider for the frontend application. It handles requests and returns portfolio, charity donation, and other analytical data.
+## 🧠 Problem Statement
+The backend powers the StockWiseCare platform by serving real-time portfolio data, managing charity donations, providing AI-based stock insights, handling file uploads, and supporting chatbot interactions—all through secure APIs.
 
-## Proposed Solution
-A RESTful API built with Express.js that serves data related to the user's investments and analytics. The backend communicates with the database to retrieve and process data.
+## ✅ Proposed Solution
+A robust and secure backend using Express.js and MongoDB that serves financial data, supports user interactions, and integrates AI and file services for enhanced user experience.
 
-## Tech Stack
+## 💻 Tech Stack
 - Node.js
 - Express.js
-- MongoDB (or other databases)
+- MongoDB (with Mongoose)
 
-## Core Features
-- **Portfolio Data**: Provides data on the user's portfolio, including value and gains.
-- **Charity Donations**: Serves data about the user's charity donations.
-- **Market Insights**: Returns AI-based insights and sentiment analysis on stock holdings.
+## 🧩 Supporting Libraries
+- `bcrypt` – for password hashing
+- `crypto` – secure tokens
+- `nodemailer` – email support
+- `express-fileupload` – file handling
+- `cloudinary` – image uploads and hosting
+- `node-cron` – scheduled tasks
+- `helmet` – HTTP security headers
+- `morgan` – logging
+- `cors` – cross-origin requests
+- `pdfkit` or similar – PDF report generation
 
-## Additional Features
-- Basic authentication to secure routes.
-- Error handling for each API request.
+## 🚀 Core Features
+- **Portfolio APIs**: Real-time data on stocks, value, and performance.
+- **Charity Donations**: Donation records and total contribution tracking.
+- **Market Insights**: Sentiment and trend analysis using AI.
+- **Chatbot API**: AI-powered responses to financial queries.
 
-## Implementation
-- Created Express routes for each data request (`GET` requests).
-- Integrated with MongoDB to retrieve and store user-related data.
+## ✨ Additional Features
+- **PDF Generation**: Export user portfolio summaries or donation receipts.
+- **File Uploads**: Support for uploading user-related documents/images.
+- **Cloudinary Integration**: Image hosting and delivery.
+- **CORS Configured**: For frontend-backend communication.
+- **Scheduled Jobs**: Background tasks (e.g., analytics refresh).
 
-## Deployment
-1. Deploy to a cloud platform such as Render or Heroku.
-2. Set up environment variables like database credentials.
-3. Deployed link: https://stockwisecare-backend.onrender.com
+## 🔧 Implementation
+- Modular routing structure using Express.
+- Mongoose schemas for users, portfolios, and donations.
+- RESTful endpoints:
+  - `/api/portfolio`
+  - `/api/charity`
+  - `/api/insights`
+  - `/api/chatbot`
+  - `/api/upload`
+  - `/api/pdf`
 
-## Integration with Frontend
-The backend API is connected with the frontend via HTTP requests made using Axios. Data is served in JSON format.
+## 🌐 Deployment
+- Live on [Render](https://render.com)  
+  🔗 [Backend Link](https://stockwisecare-backend.onrender.com)
 
-## Notes
-While the frontend and backend are connected, additional work is required for implementing proper authentication, error handling, and optimization.
+## 🔗 Integration with Frontend
+- Frontend communicates via Axios to fetch data and interact with backend services.
+- Chatbot, portfolio, and insights are all rendered using backend APIs.
 
-## Contact
-Linkdin: www.linkedin.com/in/sri-poojitha-jorige-377270294, 
-gmail: sripoojitha.2006@gmail.com
+## ⚠️ Notes
+- Frontend and backend are connected and functioning.
+- Future scope includes:
+  - Secure user authentication and authorization
+  - Enhanced chatbot intelligence
+  - Input validation and testing
+  - API documentation
+
+## 📬 Contact
+- **LinkedIn**: [Sri Poojitha Jorige](https://www.linkedin.com/in/sri-poojitha-jorige-377270294)  
+- **Email**: sripoojitha.2006@gmail.com
