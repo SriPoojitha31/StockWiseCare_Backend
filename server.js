@@ -24,7 +24,7 @@ import transactionRouter from './routes/transactionRouter.js';
 import { getNotifications, markAsSeen } from './controllers/notificationController.js';
 import { downloadPDF } from './controllers/pdfController.js';
 
-// NEW: Import new feature routers
+// New features
 import expenseRouter from './routes/expenseRouter.js';
 import badgeRouter from './routes/badgeRouter.js';
 import extensionRouter from './routes/extensionRouter.js';
@@ -32,24 +32,39 @@ import extensionRouter from './routes/extensionRouter.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load environment variables
 dotenv.config({ path: path.join(__dirname, 'config', '.env') });
 
-// App & Server Setup
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
-  cors: { origin: 'https://stock-wise-care-frontend.vercel.app', credentials: true },
+  cors: {
+    origin: [
+      'http://localhost:3000',
+      'https://stock-wise-care-frontend.vercel.app',
+    ],
+    credentials: true,
+  },
 });
 
-// DB Connection
 connectDB();
 
-// Middlewares
+// CORS Config
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://stock-wise-care-frontend.vercel.app'
+];
 app.use(cors({
-  origin: 'https://stock-wise-care-frontend.vercel.app',
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
+
+// Middlewares
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(compression());
@@ -59,11 +74,7 @@ app.use(cookieParser());
 app.use(fileUpload({ useTempFiles: true }));
 
 // Rate Limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-});
-app.use(limiter);
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 
 // API Routes
 app.use('/api/v1/auth', authRouter);
@@ -76,15 +87,20 @@ app.get('/api/v1/notifications', getNotifications);
 app.post('/api/v1/notifications/mark-as-seen', markAsSeen);
 
 // New Feature Routes
-app.use('/api/v1/expenses', expenseRouter);         // 💰 Expense Tracker
-app.use('/api/v1/badges', badgeRouter);             // 🏅 Green Investment Badge
-app.use('/api/v1/extension/news', extensionRouter); // 📰 AI News for Extension
+app.use('/api/v1/expenses', expenseRouter);
+app.use('/api/v1/badges', badgeRouter);
+app.use('/api/v1/extension/news', extensionRouter);
 
-// Real-time Communication
+// Health Check
+app.get('/api/v1/ping', (req, res) => {
+  res.json({ message: 'Backend API is reachable ✅' });
+});
+
+// Socket Events
 io.on('connection', (socket) => {
   console.log('Client connected:', socket.id);
 
-  socket.on('sendMessage', async (msg) => {
+  socket.on('sendMessage', (msg) => {
     io.emit('message', {
       id: Date.now(),
       text: "Message received. Chat handler is currently unavailable.",
@@ -113,13 +129,13 @@ app.get('/', (req, res) => {
 // Error Middleware
 app.use(errorMiddleware);
 
-// Server Listener
+// Start Server
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 }).on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
-    console.log(`Port ${PORT} is already in use. Trying port ${PORT + 1}...`);
+    console.log(`Port ${PORT} in use. Trying port ${PORT + 1}...`);
     server.listen(PORT + 1, () => {
       console.log(`Server running on port ${PORT + 1}`);
     });
