@@ -64,5 +64,6 @@ A robust and secure backend using Express.js and MongoDB that serves financial d
   - API documentation
 
 ## 📬 Contact
-- **LinkedIn**: [Sri Poojitha Jorige](https://www.linkedin.com/in/sri-poojitha-jorige-377270294)  
+- **LinkedIn**: [Sri Poojitha Jorige](https://www.linkedin.com/in/sri-poojitha-jorige-377270294)
+- **Team Members linkdin**: [Cherisma](www.linkedin.com/in/cherisma-anamala-muni), [Shivathmika](https://www.linkedin.com/in/shivathmikavelishala)
 - **Email**: sripoojitha.2006@gmail.com
